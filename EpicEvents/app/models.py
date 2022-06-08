@@ -10,14 +10,14 @@ class CustomUserManager(BaseUserManager):
     """
 
     def create_user(self, email, password, **extra_fields):
-        """Create and save a user with the given email and pasword."""
+        """Create and save a user with the given email and password."""
 
         if not email:
             raise ValueError("The email must be set")
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
-        user.save()
+        user.save(using=self._db)
         return user
 
     def create_superuser(self, email, password, **extra_fields):
@@ -47,6 +47,7 @@ class User(AbstractUser):
         MANAGEMENT = "Management"
 
     username = None
+    date_joined = None
     first_name = models.CharField(max_length=25, blank=True)
     last_name = models.CharField(max_length=25, blank=True)
     email = models.EmailField(max_length=100, unique=True)
@@ -63,7 +64,7 @@ class User(AbstractUser):
     objects = CustomUserManager()
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+        return f"{self.first_name.capitalize()} {self.last_name.capitalize()}"
 
 
 class Client(models.Model):
@@ -87,7 +88,7 @@ class Client(models.Model):
     actual_client = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name} - {self.compagny_name}"
+        return f"{self.first_name.capitalize()} {self.last_name.capitalize()} - {self.compagny_name.capitalize()}"
 
 
 class Contract(models.Model):
@@ -107,7 +108,7 @@ class Contract(models.Model):
     date_updated = models.DateTimeField(auto_now=True)
     status = models.BooleanField(default=False)
     amount = models.FloatField(blank=True)
-    payment_due = models.DateTimeField(auto_now=True)
+    payment_due = models.DateField(blank=True)
 
 
 class Event(models.Model):
@@ -131,7 +132,7 @@ class Event(models.Model):
     attendees = models.IntegerField(
         blank=True,
     )
-    event_date = models.DateTimeField(auto_now=True, blank=True)
+    event_date = models.DateField(blank=True)
     notes = models.TextField(blank=True, max_length=1000)
 
 
@@ -145,3 +146,7 @@ class Event_Status(models.Model):
     ]
 
     status = models.CharField(max_length=50, choices=STATUS, default="NOT STARTED")
+
+    class Meta:
+        verbose_name = "Event Status"
+        verbose_name_plural = verbose_name

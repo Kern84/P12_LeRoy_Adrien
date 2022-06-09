@@ -1,6 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.base_user import BaseUserManager
+from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
 from django.conf import settings
 
 
@@ -9,22 +8,22 @@ class CustomUserManager(BaseUserManager):
     Custom user model manager where email is the unique indentifiers for authentication instead of usernames.
     """
 
-    def create_user(self, email, password, **extra_fields):
-        """Create and save a user with the given email and password."""
+    def _create_user(self, email, password, **extra_fields):
 
         if not email:
             raise ValueError("The email must be set")
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
+        user = self.model(email=self.normalize_email(email), **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, password, **extra_fields):
-        """
-        Create and save a SuperUser with the given email and password.
-        """
+    def create_user(self, email, password=None, **extra_fields):
+        extra_fields.setdefault("is_superuser", False)
+        extra_fields.setdefault("is_staff", False)
+        extra_fields.setdefault("is_active", True)
+        return self._create_user(email, password, **extra_fields)
 
+    def create_superuser(self, email, password=None, **extra_fields):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
         extra_fields.setdefault("is_active", True)
@@ -33,10 +32,10 @@ class CustomUserManager(BaseUserManager):
             raise ValueError("Superuser must have is_staff=True.")
         if extra_fields.get("is_superuser") is not True:
             raise ValueError("Superuser must have is_superuser=True.")
-        return self.create_user(email, password, **extra_fields)
+        return self._create_user(email, password, **extra_fields)
 
 
-class User(AbstractUser):
+class User(AbstractUser, PermissionsMixin):
     """Class for the user information."""
 
     class User_Role(models.TextChoices):

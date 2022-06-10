@@ -47,7 +47,7 @@ class ClientViewset(ModelViewSet):
             ]
         else:
             self.permission_classes = [IsManagementTeam]
-        return super(UserViewset, self).get_permissions()
+        return super(ClientViewset, self).get_permissions()
 
 
 class ContractViewset(ModelViewSet):
@@ -70,7 +70,7 @@ class ContractViewset(ModelViewSet):
             ]
         else:
             self.permission_classes = [IsManagementTeam]
-        return super(UserViewset, self).get_permissions()
+        return super(ContractViewset, self).get_permissions()
 
 
 class EventViewset(ModelViewSet):
@@ -93,7 +93,7 @@ class EventViewset(ModelViewSet):
             ]
         else:
             self.permission_classes = [IsManagementTeam]
-        return super(UserViewset, self).get_permissions()
+        return super(EventViewset, self).get_permissions()
 
 
 class Event_StatusViewset(ModelViewSet):
@@ -114,4 +114,4 @@ class Event_StatusViewset(ModelViewSet):
             ]
         else:
             self.permission_classes = [IsManagementTeam]
-        return super(UserViewset, self).get_permissions()
+        return super(Event_StatusViewset, self).get_permissions()

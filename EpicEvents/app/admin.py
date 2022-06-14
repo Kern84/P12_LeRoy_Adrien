@@ -1,8 +1,11 @@
 from django.contrib import admin
+
 from app.models import User, Client, Contract, Event, Event_Status
+from app.forms import UserForm, ContractForm
 
 
 class UserAdmin(admin.ModelAdmin):
+    form = UserForm
     list_display = ("first_name", "last_name", "role")
     list_filter = ("last_name", "role")
     search_fields = ("last_name", "role")
@@ -15,7 +18,8 @@ class ClientAdmin(admin.ModelAdmin):
 
 
 class ContractAdmin(admin.ModelAdmin):
-    list_display = ("id", "sale_contact", "client")
+    form = ContractForm
+    list_display = ("id", "sale_contact", "client", "status")
     list_filter = ("client", "date_created", "amount")
     search_fields = ("client", "date_created", "amount")
 

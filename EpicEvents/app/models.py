@@ -126,13 +126,14 @@ class Event(models.Model):
         limit_choices_to={"role": "Support"},
     )
     event_status = models.ForeignKey(
-        "app.Event_Status", blank=True, null=True, on_delete=models.PROTECT
-    )
-    attendees = models.IntegerField(
+        "app.Event_Status",
         blank=True,
+        null=True,
+        on_delete=models.PROTECT,
     )
-    event_date = models.DateField(blank=True)
-    notes = models.TextField(blank=True, max_length=1000)
+    attendees = models.IntegerField(blank=True, null=True)
+    event_date = models.DateField(blank=True, null=True)
+    notes = models.TextField(blank=True, null=True, max_length=1000)
 
 
 class Event_Status(models.Model):
@@ -149,3 +150,6 @@ class Event_Status(models.Model):
     class Meta:
         verbose_name = "Event Status"
         verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return f"{self.status.capitalize()}"

@@ -36,8 +36,6 @@ class ContractForm(forms.ModelForm):
     def save(self, commit=True):
         contract = super().save(commit=False)
         related_client = Client.objects.get(id=contract.client.id)
-        # contract.sale_contact = User.objects.get(id=related_client.sale_contact.id)
-        # if contract.status == "True":
         event = apps.get_model("app", "Event")
         new_event = event.objects.create(client=related_client)
         new_event.save()

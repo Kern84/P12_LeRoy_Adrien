@@ -10,17 +10,17 @@ from app.serializers import (
 )
 from app.permissions import (
     IsManagementTeam,
-    IsSalesTeam,
-    IsSupportTeam,
-    IsSalesTeamResponsibleForClient,
-    IsSalesTeamResponsibleForContract,
-    IsSupportTeamResponsibleForEvent,
+    IsInTeam,
+    IsSalesTeamOrManagement,
+    IsSalesTeamResponsibleForClientOrManagement,
+    IsSalesTeamResponsibleForContractOrManagement,
+    IsSupportTeamResponsibleForEventOrManagement,
 )
 
 
 class UserViewset(ModelViewSet):
 
-    permission_classes = [IsManagementTeam]
+    permission_classes = [IsManagementTeam()]
     queryset = User.objects.all()
     serializer_class = UserSerializer
     filterset_fields = ["last_name", "role"]
@@ -35,19 +35,20 @@ class ClientViewset(ModelViewSet):
     search_fields = ["last_name", "email"]
 
     def get_permissions(self):
+        permission_classes = []
         if self.request.method == "GET":
-            self.permission_classes = [IsManagementTeam or IsSalesTeam or IsSupportTeam]
+            permission_classes = [IsInTeam()]
         elif self.request.method == "POST":
-            self.permission_classes = [IsManagementTeam or IsSalesTeam]
+            permission_classes = [IsSalesTeamOrManagement()]
         elif self.request.method == "DELETE":
-            self.permission_classes = [IsManagementTeam]
-        elif self.request.method == "UPDATE":
-            self.permission_classes = [
-                IsManagementTeam or IsSalesTeamResponsibleForClient
+            permission_classes = [IsManagementTeam()]
+        elif self.request.method == "PUT":
+            permission_classes = [
+                IsSalesTeamResponsibleForClientOrManagement(),
             ]
         else:
-            self.permission_classes = [IsManagementTeam]
-        return super(ClientViewset, self).get_permissions()
+            permission_classes = [IsManagementTeam()]
+        return permission_classes
 
 
 class ContractViewset(ModelViewSet):
@@ -58,19 +59,20 @@ class ContractViewset(ModelViewSet):
     search_fields = ["client__last_name", "client__email", "date_created", "amount"]
 
     def get_permissions(self):
+        permission_classes = []
         if self.request.method == "GET":
-            self.permission_classes = [IsManagementTeam or IsSalesTeam or IsSupportTeam]
+            permission_classes = [IsInTeam()]
         elif self.request.method == "POST":
-            self.permission_classes = [IsManagementTeam or IsSalesTeam]
+            permission_classes = [IsSalesTeamOrManagement()]
         elif self.request.method == "DELETE":
-            self.permission_classes = [IsManagementTeam]
-        elif self.request.method == "UPDATE":
-            self.permission_classes = [
-                IsManagementTeam or IsSalesTeamResponsibleForContract
+            permission_classes = [IsManagementTeam()]
+        elif self.request.method == "PUT":
+            permission_classes = [
+                IsSalesTeamResponsibleForContractOrManagement(),
             ]
         else:
-            self.permission_classes = [IsManagementTeam]
-        return super(ContractViewset, self).get_permissions()
+            permission_classes = [IsManagementTeam()]
+        return permission_classes
 
 
 class EventViewset(ModelViewSet):
@@ -81,19 +83,20 @@ class EventViewset(ModelViewSet):
     search_fields = ["client__last_name", "client__email", "event_date"]
 
     def get_permissions(self):
+        permission_classes = []
         if self.request.method == "GET":
-            self.permission_classes = [IsManagementTeam or IsSalesTeam or IsSupportTeam]
+            permission_classes = [IsInTeam()]
         elif self.request.method == "POST":
-            self.permission_classes = [IsManagementTeam or IsSalesTeam]
+            permission_classes = [IsSalesTeamOrManagement()]
         elif self.request.method == "DELETE":
-            self.permission_classes = [IsManagementTeam]
-        elif self.request.method == "UPDATE":
-            self.permission_classes = [
-                IsManagementTeam or IsSupportTeamResponsibleForEvent
+            permission_classes = [IsManagementTeam()]
+        elif self.request.method == "PUT":
+            permission_classes = [
+                IsSupportTeamResponsibleForEventOrManagement(),
             ]
         else:
-            self.permission_classes = [IsManagementTeam]
-        return super(EventViewset, self).get_permissions()
+            permission_classes = [IsManagementTeam()]
+        return permission_classes
 
 
 class Event_StatusViewset(ModelViewSet):
@@ -102,16 +105,17 @@ class Event_StatusViewset(ModelViewSet):
     serializer_class = Event_StatusSerializer
 
     def get_permissions(self):
+        permission_classes = []
         if self.request.method == "GET":
-            self.permission_classes = [IsManagementTeam or IsSalesTeam or IsSupportTeam]
+            permission_classes = [IsInTeam()]
         elif self.request.method == "POST":
-            self.permission_classes = [IsManagementTeam or IsSalesTeam]
+            permission_classes = [IsSalesTeamOrManagement()]
         elif self.request.method == "DELETE":
-            self.permission_classes = [IsManagementTeam]
-        elif self.request.method == "UPDATE":
-            self.permission_classes = [
-                IsManagementTeam or IsSupportTeamResponsibleForEvent
+            permission_classes = [IsManagementTeam()]
+        elif self.request.method == "PUT":
+            permission_classes = [
+                IsSupportTeamResponsibleForEventOrManagement(),
             ]
         else:
-            self.permission_classes = [IsManagementTeam]
-        return super(Event_StatusViewset, self).get_permissions()
+            permission_classes = [IsManagementTeam()]
+        return permission_classes

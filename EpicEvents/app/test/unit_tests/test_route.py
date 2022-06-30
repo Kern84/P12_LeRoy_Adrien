@@ -1,5 +1,6 @@
 from django.test import Client
 import pytest
+from rest_framework.authtoken.models import Token
 
 from app.models import User
 
@@ -62,30 +63,18 @@ class TestCreateUser:
 class TestLogin:
     """Class where user login is tested."""
 
-    def test_login_success(self):
-        response = client.post(
-            "/login", data=dict(dict_correct_admin_user), follow=True
-        )
-        assert response.status_code == 200
-
-
-class TestAdmin:
     def test_admin_login(self):
         response = client.post(
             "/admin/login",
             data=dict(dict_correct_admin_user),
             follow=True,
         )
-        # data = response.data.decode()
         assert response.status_code == 200
-        # assert ""
 
     def test_not_admin_login(self):
         response = client.post(
             "/admin/login",
-            data=dict(dict_correct_admin_user),
+            data=dict(dict_correct_sales_user),
             follow=True,
         )
-        data = response.content.decode()
         assert response.status_code == 200
-        assert "Please" in data

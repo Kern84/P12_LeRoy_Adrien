@@ -20,7 +20,7 @@ from app.permissions import (
 
 class UserViewset(ModelViewSet):
 
-    permission_classes = [IsManagementTeam()]
+    permission_classes = [IsManagementTeam]
     queryset = User.objects.all()
     serializer_class = UserSerializer
     filterset_fields = ["last_name", "role"]

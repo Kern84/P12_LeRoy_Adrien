@@ -21,7 +21,7 @@ Download the project file on GitHub : https://github.com/Kern84/P12_LeRoy_Adrien
 
 Download and install PostgreSQL and pgAdmin4 on your computer.
 Create a database with the settings of your choice.
-Transpose your database configuration into the EpicEvents/settings.py file.
+Transpose your database configuration into the EpicEvents/settings.py ::DATABASES file.
 
 Enter the commend lines in your terminal.
 Go to the project folder, install and activate the virtual environment:
@@ -67,3 +67,8 @@ deactivate
 ## Postman documentation
 
 https://documenter.getpostman.com/view/19829460/UzBpMSWH
+
+## Error Logging
+
+The system will create an error.log file recording the errors produced by the application.
+You can see the settings in the EpicEvents/settings.py :: LOGGING file.

@@ -20,17 +20,18 @@ class ClientAdmin(admin.ModelAdmin):
 class ContractAdmin(admin.ModelAdmin):
     form = ContractForm
     list_display = ("id", "sale_contact", "client", "status")
-    list_filter = ("client", "date_created", "amount")
-    search_fields = ("client", "date_created", "amount")
+    list_filter = ("client__last_name", "client__email", "date_created", "amount")
+    search_fields = ("client__last_name", "client__email", "date_created", "amount")
 
 
 class EventAdmin(admin.ModelAdmin):
     list_display = ("id", "support_contact", "client", "event_status")
     list_filter = (
-        "client",
+        "client__last_name",
+        "client__email",
         "event_date",
     )
-    search_fields = ("client", "event_date")
+    search_fields = ("client__last_name", "client__email", "event_date")
 
 
 class EventStatusAdmin(admin.ModelAdmin):
